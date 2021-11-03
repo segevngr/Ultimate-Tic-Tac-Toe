@@ -4,7 +4,8 @@ import './Board.css';
 function Square(props) {
     return (
         <button className="square"
-                onClick={() => props.handleClick()} >
+                style = {{backgroundColor : props.getColor}}
+                onClick = {props.handleClick} >
                 {props.value}
         </button>
     );
@@ -13,17 +14,15 @@ function Square(props) {
 function Board(props) {
     const [squares, setSquares] = useState(Array(9).fill(null));
     const [turn, setTurn] = useState(0);
-    const [status, setStatus] = useState(null);
 
     function renderSquare(i) {
         return (
             <Square
                 value = {squares[i]}
                 handleClick = {() => {handleClick(i)}}
-                // How Child changes Parent:
-                // Send Parent-Function pointer to child inside Props, and then child can trigger it
+                getColor = {getColor()}
             />
-            );
+        );
     }
 
     function handleClick(i) {
@@ -38,12 +37,11 @@ function Board(props) {
         setSquares(newSquares);
         let currTurn = turn;
         setTurn(++currTurn);
-        checkStatus(newSquares, currTurn, currPlayer);
+        isWinOrTie(newSquares, currTurn, currPlayer, i);
         props.setNextPlayer();
-        props.updatePlayableBoards(i);
     }
 
-    function checkStatus(Squares, Turn, player) {
+    function isWinOrTie(Squares, Turn, player, nextBoardId) {
         const winSquares = [
             [0, 1, 2],
             [3, 4, 5],
@@ -54,28 +52,41 @@ function Board(props) {
             [0, 4, 8],
             [2, 4, 6],
         ];
-        if(Turn === 9) {
-            setStatus('Tie!');
-            props.handleBoardTie();
-        }
-        else {
-            for (let i = 0; i < winSquares.length; i++) {
-                const a = winSquares[i][0];
-                const b = winSquares[i][1];
-                const c = winSquares[i][2];
-                if (Squares[a] != null && Squares[a] === Squares[b] && Squares[b] === Squares[c]) {
-                    setStatus(player + ' Won!')
-                    props.handleBoardWin(player);
-                    break;
-                }
+
+        let win = false;
+        for (let i = 0; i < winSquares.length; i++) {
+            const a = winSquares[i][0];
+            const b = winSquares[i][1];
+            const c = winSquares[i][2];
+            if (Squares[a] != null && Squares[a] === Squares[b] && Squares[b] === Squares[c]) {
+                win = true;
+                props.handleBoardWin(player, nextBoardId);
             }
         }
 
+        if(!win && Turn === 9)
+            props.handleBoardTie(nextBoardId);
+        else if(!win && Turn !== 9)
+            props.updateBoardsStatus(props.boards, nextBoardId);
+    }
+
+    function getColor() {
+        switch(props.board) {
+            case "play":
+                return "green";
+            case "X":
+                return "red";
+            case "O":
+                return "blue";
+            case "tie":
+                return "grey";
+            default:
+                return "white";
+        }
     }
 
     return (
             <div>
-                <div className="status">{status}</div>
                 <div className="board-row">
                     {renderSquare(0)}
                     {renderSquare(1)}
