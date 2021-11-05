@@ -12,8 +12,8 @@ function App() {
             <Router>
                 <Routes>
                     <Route path="/" element={<Home />} />
-                    <Route path="/game" element={<UltimateBoard />} />
-                    <Route path="/leaderboard" element={<Leaderboard />} />
+                    <Route path="/game/:xName/:oName" element={<UltimateBoard />} />
+                    <Route path="/leaderboard/:xName/:oName" element={<Leaderboard />} />
                 </Routes>
             </Router>
         </div>

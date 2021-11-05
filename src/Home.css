@@ -31,15 +31,21 @@ body{
     padding-top: 20px;
 }
 
-.start {
+.enabledStart {
     font-size: 40px;
     font-weight: bold;
     color: darkorange;
     text-decoration: none;
 }
 
-.start:hover {
+.enabledStart:hover {
     color: white;
+}
+
+.disabledStart {
+    font-size: 40px;
+    font-weight: bold;
+    color: grey;
 }
 
 .input {

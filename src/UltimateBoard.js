@@ -1,17 +1,18 @@
 import React, {useState} from 'react';
 import Board from './Board.js';
 import './UltimateBoard.css';
-import { Link } from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
 
-function UltimateBoard(props) {
+function UltimateBoard() {
 
     // boards: [enabled | disabled | tie |  X  |  O ]
     const [boards, setBoards] = useState(Array(9).fill("enabled"));
     const [isXNext, setNext] = useState(true);
     const [steps, setSteps] = useState(0);
     const [winner, setWinner] = useState("");
+    const {xName, oName} = useParams();
 
-    function renderBoard(boardId) {
+function renderBoard(boardId) {
         return (
             <Board
                 boardId = {boardId}
@@ -73,8 +74,9 @@ function UltimateBoard(props) {
             const c = winBoards[i][2];
             if ((Boards[a] === 'X' || Boards[a] === 'O')
                 && Boards[a] === Boards[b] && Boards[b] === Boards[c]) {
-                    setWinner("Congrats! You won!!!");
-                    saveInLeaderboard()
+                    const winnerName = Boards[a]==='X'? xName : oName;
+                    setWinner("Congrats " +winnerName +", You Won!!!");
+                    saveInLeaderboard(winnerName);
                     for(let i=0; i<Boards.length; i++) {
                          if (Boards[i] === "enabled")
                              Boards[i] = "disabled";
@@ -105,19 +107,18 @@ function UltimateBoard(props) {
         setBoards(Boards);
     }
 
-    function saveInLeaderboard () {
-        const player = "player";
-        localStorage.setItem(player, JSON.stringify(steps));
+    function saveInLeaderboard (winnerName) {
+        localStorage.setItem(winnerName, JSON.stringify(steps));
     }
 
     return (
         <div>
-            <table className="player">
+            <table className="bar">
                 <Link className="links" to="/"><td>New Game</td></Link>
-                <td ><font color={isXNext? "crimson" : "cornflowerblue"}>
-                    Next move: {isXNext? "X" : "O"}</font></td>
+                <td className="player"><font color={isXNext? "crimson" : "cornflowerblue"}>
+                    {isXNext? "X: " : "O: "} {isXNext? xName : oName}</font></td>
                 <td><font color={isXNext? "crimson" : "cornflowerblue"}>{steps} Steps</font></td>
-                <Link className="links" to="/leaderboard"><td> Leaderboard </td></Link>
+                <Link className="links" to={"/leaderboard/" +xName +"/" +oName}><td> Leaderboard </td></Link>
             </table>
         <div className="ultimate-grid">
             <div className = "board" id="0"> {renderBoard(0)} </div>
@@ -131,7 +132,7 @@ function UltimateBoard(props) {
             <div className = "board" id="8"> {renderBoard(8)} </div>
         </div>
             <div className="winner"><font color={!isXNext? "crimson" : "cornflowerblue"}>
-                {winner}</font></div>
+                {winner === ''? '': winner} </font></div>
         </div>
     );
 }

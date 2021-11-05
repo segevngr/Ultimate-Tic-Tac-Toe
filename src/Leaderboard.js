@@ -1,9 +1,14 @@
-import React, {useState} from 'react';
-import { Link } from "react-router-dom";
+import React, {useState, useEffect} from 'react';
+import {Link, useParams} from "react-router-dom";
 import "./Leaderboard.css";
 
 function Leaderboard() {
     const [scores, setScores] = useState([]);
+    const {xName, oName} = useParams();
+
+    useEffect(()=>{
+        fetchScores();
+    }, [])
 
     const listScores = scores.map((item) =>
         <tr>
@@ -13,12 +18,6 @@ function Leaderboard() {
         </tr>);
 
     function fetchScores () {
-        localStorage.setItem("segev", "23");
-        localStorage.setItem("tomer", "16");
-        localStorage.setItem("dihozner", "33");
-        localStorage.setItem("gliz", "15");
-        localStorage.setItem("avif", "12");
-
         const keys = Object.keys(localStorage);
         let values = [];
         for(let i=0; i<keys.length; i++)
@@ -50,10 +49,7 @@ function Leaderboard() {
                     {listScores}
                 </tbody>
             </table>
-            <div className="back-container"><Link to="/game" className="back">Back</Link></div>
-            <button onClick = {fetchScores} >
-                Fetch Scores!
-            </button>
+            <div className="back-container"><Link to={"/game/" +xName +"/" +oName} className="back">Back</Link></div>
         </div>
 
     );

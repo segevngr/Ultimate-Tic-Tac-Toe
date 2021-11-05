@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import {Link} from "react-router-dom";
 import React, {useState} from 'react';
 import "./Home.css";
 
@@ -6,6 +6,20 @@ import "./Home.css";
 function Home() {
     const [xName, setXName] = useState('');
     const [oName, setOName] = useState('');
+
+    function disabledStart() {
+        return (
+            <div className="disabledStart"> Start! </div>
+        );
+    }
+
+    function enabledStart() {
+        return (
+            <Link className="enabledStart" to={"/game/" +xName +"/" +oName}>
+                Start!
+            </Link>
+        );
+    }
 
     return (
         <div>
@@ -25,11 +39,8 @@ function Home() {
                 </tbody>
             </table>
                 <div>
-                    <Link className="start" to="/game">
-                        Start!
-                    </Link>
+                    {(xName==='' || oName==='')? disabledStart() : enabledStart()}
                 </div>
-
 
         </div>
     );
