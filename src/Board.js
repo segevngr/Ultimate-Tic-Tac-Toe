@@ -26,22 +26,22 @@ function Board(props) {
     }
 
     function handleClick(i) {
-        if(!props.isPlayable(props.boardId))
+        if(!props.isEnabled(props.boardId))
             return;
         if(squares[i] != null)
             return;
         props.incSteps();
-        let currPlayer = props.getPlayer()? 'X' : 'O';
+        let player = props.getPlayer()? 'X' : 'O';
         const newSquares = squares.slice();
-        newSquares[i] = currPlayer;
+        newSquares[i] = player;
         setSquares(newSquares);
         let currTurn = turn;
         setTurn(++currTurn);
-        isWinOrTie(newSquares, currTurn, currPlayer, i);
+        updateBoards(newSquares, currTurn, player, i);
         props.setNextPlayer();
     }
 
-    function isWinOrTie(Squares, Turn, player, nextBoardId) {
+    function updateBoards(Squares, Turn, player, nextBoardId) {
         const winSquares = [
             [0, 1, 2],
             [3, 4, 5],
@@ -67,41 +67,35 @@ function Board(props) {
         if(!win && Turn === 9)
             props.handleBoardTie(nextBoardId);
         else if(!win && Turn !== 9)
-            props.updateBoardsStatus(props.boards, nextBoardId);
+            props.enableBoards(props.boards, nextBoardId);
     }
 
     function getColor() {
         switch(props.board) {
-            case "play":
-                return "green";
+            case "enabled":
+                return "ghostwhite";
             case "X":
-                return "red";
+                return "crimson";
             case "O":
-                return "blue";
+                return "cornflowerblue";
             case "tie":
-                return "grey";
+                return "#333333";
             default:
-                return "white";
+                return "gray";
         }
     }
 
     return (
-            <div>
-                <div className="board-row">
-                    {renderSquare(0)}
-                    {renderSquare(1)}
-                    {renderSquare(2)}
-                </div>
-                <div className="board-row">
-                    {renderSquare(3)}
-                    {renderSquare(4)}
-                    {renderSquare(5)}
-                </div>
-                <div className="board-row">
-                    {renderSquare(6)}
-                    {renderSquare(7)}
-                    {renderSquare(8)}
-                </div>
+            <div className="board-grid">
+                <div>{renderSquare(0)}</div>
+                <div>{renderSquare(1)}</div>
+                <div>{renderSquare(2)}</div>
+                <div>{renderSquare(3)}</div>
+                <div>{renderSquare(4)}</div>
+                <div>{renderSquare(5)}</div>
+                <div>{renderSquare(6)}</div>
+                <div>{renderSquare(7)}</div>
+                <div>{renderSquare(8)}</div>
             </div>
         );
 }

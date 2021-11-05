@@ -1,0 +1,14 @@
+body {
+    background-color: #333333;
+    text-align: center;
+    align-content: center;
+}
+
+.title {
+    font-family: "Century Gothic";
+    font-size: 60px;
+    color: orange;
+    padding-top: 10px;
+    padding-bottom: 20px;
+    font-weight: bold;
+}
